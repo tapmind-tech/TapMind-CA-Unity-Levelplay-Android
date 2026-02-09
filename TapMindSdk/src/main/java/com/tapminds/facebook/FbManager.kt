@@ -956,7 +956,7 @@ class FbManager {
     private fun updateAdSettings(parameters: TapMindAdapterParameters) {
         val serverParameters = parameters.getServerParameters()
 
-        if (serverParameters!!.containsKey("video_autoplay")) {
+        if (serverParameters.containsKey("video_autoplay")) {
             val videoAutoplay = serverParameters.getBoolean("video_autoplay")
             AdSettings.setVideoAutoplay(videoAutoplay)
         }
