@@ -30,8 +30,6 @@ class ISTapMindCustomAdapterCustomAdapter : BaseAdapter() {
                 return
             }
 
-            // ✅ REAL one-time initialization here
-            // Example: TapMindSdk.initialize(context)
             isInitialized = true
 
             Log.d(TAG, "Init success (one-time)")
