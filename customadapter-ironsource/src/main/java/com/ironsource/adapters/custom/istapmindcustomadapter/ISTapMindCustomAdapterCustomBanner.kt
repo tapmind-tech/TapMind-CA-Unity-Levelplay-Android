@@ -49,9 +49,15 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
             Log.d(TAG, "adUnitData $key : $value")
         }
 
+        val config = addata.configuration
+        val instanceName = config["instanceName"] as? String
+
+        Log.e("AdUnitData", "instanceName = $instanceName")
+
         AdRequestPayloadHolder.playLoad = AdRequestPayload(
             appName = getAppName(activity),
-            placementId = "banner_map",
+//            placementId = "banner_map",
+            placementId = instanceName,
             appVersion = getAppVersion(activity),
             adType = "Banner",
             country = Locale.getDefault().country,

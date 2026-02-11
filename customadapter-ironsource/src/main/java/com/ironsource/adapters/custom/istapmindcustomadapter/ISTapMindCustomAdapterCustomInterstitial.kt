@@ -15,6 +15,7 @@ import com.tapminds.adapter.listener.TapMindAdapterResponseParameters
 import com.tapminds.ads.interstitial.TapMindInterstitialAdapterListener
 import com.tapminds.network.AdRequestPayload
 import com.tapminds.network.AdRequestPayloadHolder
+import com.tapminds.network.AdRequestPayloadHolder.playLoad
 import java.util.Locale
 
 class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings) :
@@ -45,11 +46,15 @@ class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings)
         }
 
         val networkId = adUnitData["networkId"] as? String ?: ""
+        val config = adData.configuration
+        val instanceName = config["instanceName"] as? String
+
+        Log.e("AdUnitData", "instanceName = $instanceName")
 
         val playLoad = AdRequestPayload(
             appName = getAppName(context),
-//            placementId = "tapmind_interstitial",
-            placementId = "interstitial_map",
+//            placementId = "interstitial_map",
+            placementId = instanceName,
             appVersion = getAppVersion(context),
             adType = "Interstitial",
             country = Locale.getDefault().country,

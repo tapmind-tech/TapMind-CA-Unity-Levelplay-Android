@@ -27,21 +27,34 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
     private var request: TapMindAdapterResponseParameters? = null
     private var tapMindRewardedAdapterListener: TapMindRewardedAdapterListener? = null
     private var isRewardedLoaded = false
+    private var isRewardedLoading = false
 
     override fun loadAd(
         adData: AdData,
         context: Context,
         rewardedVideoAdListener: RewardedVideoAdListener
     ) {
+        if (isRewardedLoading || isRewardedLoaded) {
+            Log.w(TAG, "⚠️ Rewarded already loading/loaded. Ignoring duplicate loadAd call.")
+            return
+        }
+
+        isRewardedLoading = true
+
         val adUnitData = adData.adUnitData
 
         for ((key, value) in adUnitData) {
             Log.d("AdUnitData", "$key : $value")
         }
 
+        val config = adData.configuration
+        val instanceName = config["instanceName"] as? String
+
+        Log.e("AdUnitData", "instanceName = $instanceName")
+
         AdRequestPayloadHolder.playLoad = AdRequestPayload(
             appName = getAppName(context),
-            placementId = "reward_map",
+            placementId = instanceName,
             appVersion = getAppVersion(context),
             adType = "Rewarded",
             country = Locale.getDefault().country,
@@ -97,18 +110,21 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
         tapMindRewardedAdapterListener = object : TapMindRewardedAdapterListener {
             override fun onRewardedAdLoaded() {
                 isRewardedLoaded = true
+                isRewardedLoading = false
                 Log.d(TAG, "$TAG1 : onAdLoaded")
                 rewardedVideoAdListener.onAdLoadSuccess()
             }
 
             override fun onRewardedAdLoaded(bundle: Bundle?) {
                 isRewardedLoaded = true
+                isRewardedLoading = false
                 Log.d(TAG, "$TAG1 : onAdLoaded Bundle")
                 rewardedVideoAdListener.onAdLoadSuccess()
             }
 
             override fun onRewardedAdLoadFailed(tapMindAdapterError: TapMindAdapterError) {
                 isRewardedLoaded = false
+                isRewardedLoading = false
                 Log.d(
                     TAG,
                     "$TAG1 : onAdFailedToLoad " + tapMindAdapterError.getErrorCode() + " " + tapMindAdapterError.getErrorMessage()
@@ -131,17 +147,22 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
             }
 
             override fun onRewardedAdDisplayFailed(tapMindAdapterError: TapMindAdapterError?) {
+                isRewardedLoading = false
                 Log.d(
                     TAG,
                     "$TAG1 : onRewardedAdDisplayFailed " + tapMindAdapterError?.getErrorCode() + " " + tapMindAdapterError?.getErrorMessage()
                 )
-                rewardedVideoAdListener.onAdShowFailed(tapMindAdapterError!!.getErrorCode(), tapMindAdapterError.getMessage())
+                rewardedVideoAdListener.onAdShowFailed(
+                    tapMindAdapterError!!.getErrorCode(),
+                    tapMindAdapterError.getMessage()
+                )
             }
 
             override fun onRewardedAdDisplayFailed(
                 tapMindAdapterError: TapMindAdapterError?,
                 bundle: Bundle?
             ) {
+                isRewardedLoading = false
                 isRewardedLoaded = false
                 Log.d(
                     TAG,
@@ -164,12 +185,14 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
             }
 
             override fun onRewardedAdHidden() {
+                isRewardedLoading = false
                 isRewardedLoaded = false
                 Log.d(TAG, "$TAG1 : onInterstitialAdHidden")
                 rewardedVideoAdListener.onAdClosed()
             }
 
             override fun onRewardedAdHidden(bundle: Bundle?) {
+                isRewardedLoading = false
                 Log.d(TAG, "$TAG1 : onInterstitialAdHidden Bundle")
                 rewardedVideoAdListener.onAdClosed()
             }

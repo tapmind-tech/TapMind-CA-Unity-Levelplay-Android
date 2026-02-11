@@ -51,7 +51,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    compileOnly("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
+//    add("api", "com.unity3d.ads-mediation:mediation-sdk:9.3.0")
+    api("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
+    api("com.unity3d.ads:unity-ads:4.12.2")
+//    compileOnly("com.unity3d.ads:mediation-sdk-banner:9.3.0")
+//    compileOnly("com.unity3d.mediation:mediation-sdk-interstitial:9.3.0")
+//    compileOnly("com.unity3d.mediation:mediation-sdk-rewarded:9.3.0")
 //    implementation(project(":customadapter-admob"))
     implementation(project(":TapMindSdk"))
     compileOnly("com.google.android.gms:play-services-ads:23.6.0")

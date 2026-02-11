@@ -15,6 +15,7 @@ class ISTapMindCustomAdapterCustomAdapter : BaseAdapter() {
     companion object {
         const val ADAPTER_VERSION = "1.0.0"
         const val NETWORK_NAME = "TapMind"
+        private var isInitialized = false
     }
 
     override fun init(
@@ -23,7 +24,19 @@ class ISTapMindCustomAdapterCustomAdapter : BaseAdapter() {
         initializationListener: NetworkInitializationListener?
     ) {
         try {
+            if (isInitialized) {
+                initializationListener?.onInitSuccess()
+                Log.d(TAG, "Init skipped (already initialized)")
+                return
+            }
+
+            // ✅ REAL one-time initialization here
+            // Example: TapMindSdk.initialize(context)
+            isInitialized = true
+
+            Log.d(TAG, "Init success (one-time)")
             initializationListener?.onInitSuccess()
+
             Log.e(TAG, "initializationListener onInitSuccess: IronSource")
         } catch (_: Exception) {
             initializationListener?.onInitFailed(
