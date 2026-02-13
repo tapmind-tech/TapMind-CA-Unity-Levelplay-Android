@@ -1,3 +1,5 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,12 +7,12 @@ plugins {
 }
 
 android {
-    namespace = "com.ironsource.adapters.custom.istapmindcustomadapter"
+    namespace = "com.tapminds"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 23
-
+        version = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -18,18 +20,12 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
 
         debug {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -39,31 +35,35 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    sourceSets {
-        named("main") {
-            resources.srcDirs("src/main/resources")
-        }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
 dependencies {
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.appcompat)
+
+    implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-//    add("api", "com.unity3d.ads-mediation:mediation-sdk:9.3.0")
-    api("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
-//    api("com.unity3d.ads:unity-ads:4.12.2")
-//    compileOnly("com.unity3d.ads:mediation-sdk-banner:9.3.0")
-//    compileOnly("com.unity3d.mediation:mediation-sdk-interstitial:9.3.0")
-//    compileOnly("com.unity3d.mediation:mediation-sdk-rewarded:9.3.0")
-//    implementation(project(":customadapter-admob"))
-    implementation(project(":TapMindSdk"))
+//    compileOnly("com.applovin:applovin-sdk:13.5.0")
+
     compileOnly("com.google.android.gms:play-services-ads:23.6.0")
+    compileOnly("com.facebook.android:audience-network-sdk:6.16.0")
+    compileOnly("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
+
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    implementation("com.google.code.gson:gson:2.13.1")
+
+//    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+
+//    compileOnly("com.applovin.mediation:google-adapter:24.7.0.0")
+//    compileOnly("com.applovin.mediation:facebook-adapter:6.21.0.0")
 }
 
 afterEvaluate {
@@ -73,7 +73,7 @@ afterEvaluate {
                 from(components["release"])
 
                 groupId = "com.github.TapMind"
-                artifactId = "CustomAdapter-ironSource"
+                artifactId = "TapmindSdk"
                 version = "1.0.0"
             }
         }
