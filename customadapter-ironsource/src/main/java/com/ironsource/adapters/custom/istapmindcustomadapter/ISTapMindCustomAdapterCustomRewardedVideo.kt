@@ -138,12 +138,15 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
 
             override fun onRewardedAdDisplayed() {
                 Log.d(TAG, "$TAG1 : onRewardedAdDisplayed")
-                rewardedVideoAdListener.onAdOpened()
+//                rewardedVideoAdListener.onAdOpened()
+                rewardedVideoAdListener.onAdVisible()
+                rewardedVideoAdListener.onAdStarted()
             }
 
             override fun onRewardedAdDisplayed(bundle: Bundle) {
                 Log.d(TAG, "$TAG1 : onRewardedAdDisplayed Bundle")
-                rewardedVideoAdListener.onAdOpened()
+                rewardedVideoAdListener.onAdStarted()
+                rewardedVideoAdListener.onAdVisible()
             }
 
             override fun onRewardedAdDisplayFailed(tapMindAdapterError: TapMindAdapterError?) {
@@ -215,6 +218,7 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
         activity: Activity,
         rewardedVideoAdListener: RewardedVideoAdListener
     ) {
+        Log.e(TAG, "showAd Ironsource")
         if (!isRewardedLoaded) {
             Log.e(TAG, "❌ showAd called but rewarded not loaded")
             rewardedVideoAdListener.onAdShowFailed(

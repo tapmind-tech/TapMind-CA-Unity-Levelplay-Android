@@ -1,3 +1,5 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,7 +9,6 @@ plugins {
 android {
     namespace = "com.ironsource.adapters.custom.istapmindcustomadapter"
     compileSdk = 36
-
     defaultConfig {
         minSdk = 23
 
@@ -18,18 +19,12 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
 
         debug {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -39,31 +34,20 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    sourceSets {
-        named("main") {
-            resources.srcDirs("src/main/resources")
-        }
-    }
 }
 
 dependencies {
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.appcompat)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-//    add("api", "com.unity3d.ads-mediation:mediation-sdk:9.3.0")
-    api("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
-//    api("com.unity3d.ads:unity-ads:4.12.2")
-//    compileOnly("com.unity3d.ads:mediation-sdk-banner:9.3.0")
-//    compileOnly("com.unity3d.mediation:mediation-sdk-interstitial:9.3.0")
-//    compileOnly("com.unity3d.mediation:mediation-sdk-rewarded:9.3.0")
-//    implementation(project(":customadapter-admob"))
+    compileOnly("com.applovin:applovin-sdk:13.5.0")
     implementation(project(":TapMindSdk"))
-    compileOnly("com.google.android.gms:play-services-ads:23.6.0")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 }
 
 //afterEvaluate {
@@ -73,7 +57,7 @@ dependencies {
 //                from(components["release"])
 //
 //                groupId = "com.github.TapMind"
-//                artifactId = "CustomAdapter-ironSource"
+//                artifactId = "CustomAdapter-appLovin"
 //                version = "1.0.0"
 //            }
 //        }
