@@ -58,7 +58,8 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
             appVersion = getAppVersion(context),
             adType = "Rewarded",
             country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            packageName = getPackageName(context),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         request = object : TapMindAdapterResponseParameters {

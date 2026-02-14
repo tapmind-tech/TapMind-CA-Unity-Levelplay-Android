@@ -58,7 +58,8 @@ class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings)
             appVersion = getAppVersion(context),
             adType = "Interstitial",
             country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            packageName = getPackageName(context),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         Log.e(TAG, "loadAd playLoad: $playLoad")

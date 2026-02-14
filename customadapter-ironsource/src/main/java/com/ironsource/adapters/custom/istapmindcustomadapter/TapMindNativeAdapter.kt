@@ -40,7 +40,8 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
             appVersion = getAppVersion(context),
             adType = "Native",
             country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            packageName = getPackageName(context),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         val request = object : TapMindAdapterResponseParameters {
