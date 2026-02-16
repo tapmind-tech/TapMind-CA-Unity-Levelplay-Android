@@ -61,7 +61,8 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
             appVersion = getAppVersion(activity),
             adType = "Banner",
             country = Locale.getDefault().country,
-            packageName = getPackageName(activity)
+            packageName = getPackageName(activity),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         val request = object : TapMindAdapterResponseParameters {
@@ -112,7 +113,7 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
         }
 
         TapMindsMediationAdapter.getInstance().loadAdViewAd(
-            request, TapMindAdFormat.BANNER, activity, object : TapMindAdViewAdapterListener {
+            request, TapMindAdFormat.BANNER, activity, 0,object : TapMindAdViewAdapterListener {
                 override fun onAdViewAdLoaded(view: View) {
 
                     val layoutParams = FrameLayout.LayoutParams(
