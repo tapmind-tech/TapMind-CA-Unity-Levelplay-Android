@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ironsource.adapters.custom.istapmindcustomadapter"
+    namespace = "com.ironsource.adapters.custom.tapmind_ironsource"
     compileSdk = 36
 
     defaultConfig {
@@ -18,12 +18,18 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
 
         debug {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -51,7 +57,7 @@ dependencies {
 
 //    add("api", "com.unity3d.ads-mediation:mediation-sdk:9.3.0")
     api("com.unity3d.ads-mediation:mediation-sdk:9.3.0")
-    api("com.unity3d.ads:unity-ads:4.12.2")
+//    api("com.unity3d.ads:unity-ads:4.12.2")
 //    compileOnly("com.unity3d.ads:mediation-sdk-banner:9.3.0")
 //    compileOnly("com.unity3d.mediation:mediation-sdk-interstitial:9.3.0")
 //    compileOnly("com.unity3d.mediation:mediation-sdk-rewarded:9.3.0")
