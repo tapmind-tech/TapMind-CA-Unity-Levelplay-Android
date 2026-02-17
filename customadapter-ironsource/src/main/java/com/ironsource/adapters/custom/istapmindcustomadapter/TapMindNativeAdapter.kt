@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.browser.customtabs.CustomTabsClient.getPackageName
 import com.ironsource.mediationsdk.adunit.adapter.BaseNativeAd
 import com.ironsource.mediationsdk.adunit.adapter.listener.NativeAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
@@ -18,7 +17,6 @@ import com.tapminds.ads.native.TapMindNativeAdAdapterListener
 import com.tapminds.network.AdRequestPayload
 import com.tapminds.network.AdRequestPayloadHolder
 import java.util.Locale
-import kotlin.collections.iterator
 
 class TapMindNativeAdapter(networkSettings: NetworkSettings) :
     BaseNativeAd<ISTapMindCustomAdapterCustomAdapter>(networkSettings) {
@@ -40,7 +38,8 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
             appVersion = getAppVersion(context),
             adType = "Native",
             country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            packageName = getPackageName(context),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         val request = object : TapMindAdapterResponseParameters {
@@ -92,7 +91,7 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
 
         TapMindsMediationAdapter.getInstance()
             .loadNativeAd(
-                request, context as Activity,
+                request, context as Activity,0,
                 object : TapMindNativeAdAdapterListener {
 
                     override fun onNativeAdLoaded(
