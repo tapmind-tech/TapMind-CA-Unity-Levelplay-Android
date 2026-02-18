@@ -15,7 +15,6 @@ import com.tapminds.adapter.listener.TapMindAdapterResponseParameters
 import com.tapminds.ads.interstitial.TapMindInterstitialAdapterListener
 import com.tapminds.network.AdRequestPayload
 import com.tapminds.network.AdRequestPayloadHolder
-import com.tapminds.network.AdRequestPayloadHolder.playLoad
 import java.util.Locale
 
 class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings) :
@@ -58,7 +57,8 @@ class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings)
             appVersion = getAppVersion(context),
             adType = "Interstitial",
             country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            packageName = getPackageName(context),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         Log.e(TAG, "loadAd playLoad: $playLoad")

@@ -61,7 +61,8 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
             appVersion = getAppVersion(activity),
             adType = "Banner",
             country = Locale.getDefault().country,
-            packageName = getPackageName(activity)
+            packageName = getPackageName(activity),
+            "ISTapMindCustomAdapterCustomAdapter"
         )
 
         val request = object : TapMindAdapterResponseParameters {
