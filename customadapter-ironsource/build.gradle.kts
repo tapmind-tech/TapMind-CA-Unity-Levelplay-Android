@@ -71,16 +71,16 @@ dependencies {
     api("com.google.android.gms:play-services-ads:23.6.0")
 }
 
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            create<MavenPublication>("release") {
-//                from(components["release"])
-//
-//                groupId = "com.github.TapMind"
-//                artifactId = "CustomAdapter-ironSource"
-//                version = "1.0.0"
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+
+                groupId = "com.github.TapMind"
+                artifactId = "CustomAdapter-ironSource"
+                version = "1.0.0"
+            }
+        }
+    }
+}
