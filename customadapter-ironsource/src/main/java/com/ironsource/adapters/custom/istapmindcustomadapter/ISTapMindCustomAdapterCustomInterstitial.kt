@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.ironsource.adapters.custom.istapmindcustomadapter.GeoProviderIronSource.getAppInfo
 import com.ironsource.mediationsdk.adunit.adapter.BaseInterstitial
 import com.ironsource.mediationsdk.adunit.adapter.listener.InterstitialAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
@@ -15,7 +16,6 @@ import com.tapminds.adapter.listener.TapMindAdapterResponseParameters
 import com.tapminds.ads.interstitial.TapMindInterstitialAdapterListener
 import com.tapminds.network.AdRequestPayload
 import com.tapminds.network.AdRequestPayloadHolder
-import com.tapminds.network.AdRequestPayloadHolder.playLoad
 import java.util.Locale
 
 class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings) :
@@ -50,15 +50,18 @@ class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings)
         val instanceName = config["instanceName"] as? String
 
         Log.e("AdUnitData", "instanceName = $instanceName")
+        val appData = getAppInfo(context)
+        val country = Locale.getDefault().country
+        val geo = GeoProviderIronSource.get(country)
 
         val playLoad = AdRequestPayload(
-            appName = getAppName(context),
-//            placementId = "interstitial_map",
+            appName = appData.appName,
             placementId = instanceName,
-            appVersion = getAppVersion(context),
+            appVersion = appData.versionName,
             adType = "Interstitial",
-            country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            country = country,
+            packageName = appData.packageName,
+            adapterName = "ISTapMindCustomAdapterCustomAdapter",
         )
 
         Log.e(TAG, "loadAd playLoad: $playLoad")
@@ -221,33 +224,5 @@ class ISTapMindCustomAdapterCustomInterstitial(networkSettings: NetworkSettings)
     }
 
     override fun destroyAd(adData: AdData) {
-    }
-
-    private fun getAppVersion(context: Context): String {
-        return try {
-            val pIInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            val appVersion = pIInfo.versionName.toString()
-            return appVersion
-        } catch (_: Exception) {
-            "unknown"
-        }
-    }
-
-    private fun getAppName(context: Context): String {
-        return try {
-            val applicationInfo = context.applicationInfo
-            val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
-            return appName
-        } catch (_: Exception) {
-            "Unknown"
-        }
-    }
-
-    private fun getPackageName(context: Context): String {
-        return try {
-            context.packageName
-        } catch (_: Exception) {
-            "Unknown"
-        }
     }
 }
