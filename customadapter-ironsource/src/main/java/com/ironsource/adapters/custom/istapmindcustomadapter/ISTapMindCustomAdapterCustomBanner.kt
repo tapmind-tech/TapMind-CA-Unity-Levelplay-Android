@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.android.gms.ads.mediation.MediationBannerAdCallback
+import com.ironsource.adapters.custom.istapmindcustomadapter.GeoProviderIronSource.getAppInfo
 import com.ironsource.mediationsdk.ISBannerSize
 import com.ironsource.mediationsdk.adunit.adapter.BaseBanner
 import com.ironsource.mediationsdk.adunit.adapter.listener.BannerAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType
 import com.ironsource.mediationsdk.model.NetworkSettings
+import com.ironsource.mediationsdk.utils.IronSourceUtils
 import com.tapminds.adapter.TapMindsMediationAdapter
 import com.tapminds.adapter.listener.TapMindAdapterError
 import com.tapminds.adapter.listener.TapMindAdapterResponseParameters
@@ -54,14 +56,19 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
 
         Log.e("AdUnitData", "instanceName = $instanceName")
 
+        val appData = getAppInfo(activity)
+        val country = Locale.getDefault().country
+        val geo = GeoProviderIronSource.get(country)
+
         AdRequestPayloadHolder.playLoad = AdRequestPayload(
-            appName = getAppName(activity),
-//            placementId = "banner_map",
+            appName = appData.appName,
             placementId = instanceName,
-            appVersion = getAppVersion(activity),
+            appVersion = appData.versionName,
             adType = "Banner",
-            country = Locale.getDefault().country,
-            packageName = getPackageName(activity)
+            country = country,
+            packageName = appData.packageName,
+            adapterName = "ISTapMindCustomAdapterCustomAdapter",
+            sdkVersion = GeoProviderIronSource.sdkVersion
         )
 
         val request = object : TapMindAdapterResponseParameters {
@@ -126,7 +133,7 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
 
                 override fun onAdViewAdLoaded(view: View, bundle: Bundle?) {
                     Log.d(TAG, "$TAG1 : onAdLoaded with bundle")
-                    onAdViewAdLoaded(view) // Call the single-parameter version
+                    onAdViewAdLoaded(view)
                 }
 
                 override fun onAdViewAdLoadFailed(error: TapMindAdapterError) {
@@ -210,24 +217,6 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
         bannerAdListener = null
     }
 
-    private fun getAppVersion(context: Context): String {
-        return try {
-            val pIInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            pIInfo.versionName.toString()
-        } catch (_: Exception) {
-            "unknown"
-        }
-    }
-
-    private fun getAppName(context: Context): String {
-        return try {
-            val applicationInfo = context.applicationInfo
-            context.packageManager.getApplicationLabel(applicationInfo).toString()
-        } catch (_: Exception) {
-            "Unknown"
-        }
-    }
-
     private fun findBannerContainer(adUnitData: Map<String, Any>): ViewGroup? {
         return when {
             adUnitData["adView"] is ViewGroup -> adUnitData["adView"] as ViewGroup
@@ -237,14 +226,6 @@ class ISTapMindCustomAdapterCustomBanner(networkSettings: NetworkSettings) :
                 Log.e("APP@@@", "No valid banner container found in adUnitData")
                 null
             }
-        }
-    }
-
-    private fun getPackageName(context: Context): String {
-        return try {
-            context.packageName
-        } catch (_: Exception) {
-            "Unknown"
         }
     }
 
