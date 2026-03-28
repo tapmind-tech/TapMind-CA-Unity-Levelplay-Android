@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.ironsource.adapters.custom.istapmindcustomadapter.GeoProviderIronSource.getAppInfo
 import com.ironsource.mediationsdk.adunit.adapter.BaseRewardedVideo
 import com.ironsource.mediationsdk.adunit.adapter.listener.RewardedVideoAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdapterErrorType
 import com.ironsource.mediationsdk.model.NetworkSettings
+import com.ironsource.mediationsdk.utils.IronSourceUtils
 import com.tapminds.adapter.TapMindsMediationAdapter
 import com.tapminds.adapter.listener.TapMindAdapterError
 import com.tapminds.adapter.listener.TapMindAdapterResponseParameters
@@ -52,13 +54,19 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
 
         Log.e("AdUnitData", "instanceName = $instanceName")
 
+        val appData = getAppInfo(context)
+        val country = Locale.getDefault().country
+        val geo = GeoProviderIronSource.get(country)
+
         AdRequestPayloadHolder.playLoad = AdRequestPayload(
-            appName = getAppName(context),
+            appName = appData.appName,
             placementId = instanceName,
-            appVersion = getAppVersion(context),
+            appVersion = appData.versionName,
             adType = "Rewarded",
-            country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            country = country,
+            packageName = appData.packageName,
+            adapterName = "ISTapMindCustomAdapterCustomAdapter",
+            sdkVersion = GeoProviderIronSource.sdkVersion
         )
 
         request = object : TapMindAdapterResponseParameters {
@@ -138,12 +146,15 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
 
             override fun onRewardedAdDisplayed() {
                 Log.d(TAG, "$TAG1 : onRewardedAdDisplayed")
-                rewardedVideoAdListener.onAdOpened()
+//                rewardedVideoAdListener.onAdOpened()
+                rewardedVideoAdListener.onAdVisible()
+                rewardedVideoAdListener.onAdStarted()
             }
 
             override fun onRewardedAdDisplayed(bundle: Bundle) {
                 Log.d(TAG, "$TAG1 : onRewardedAdDisplayed Bundle")
-                rewardedVideoAdListener.onAdOpened()
+                rewardedVideoAdListener.onAdStarted()
+                rewardedVideoAdListener.onAdVisible()
             }
 
             override fun onRewardedAdDisplayFailed(tapMindAdapterError: TapMindAdapterError?) {
@@ -215,6 +226,7 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
         activity: Activity,
         rewardedVideoAdListener: RewardedVideoAdListener
     ) {
+        Log.e(TAG, "showAd Ironsource")
         if (!isRewardedLoaded) {
             Log.e(TAG, "❌ showAd called but rewarded not loaded")
             rewardedVideoAdListener.onAdShowFailed(
@@ -246,33 +258,5 @@ class ISTapMindCustomAdapterCustomRewardedVideo(networkSettings: NetworkSettings
 
     override fun destroyAd(adData: AdData) {
 //        tapMindRewardedAdapterListener?.onRewardedAdHidden()
-    }
-
-    private fun getAppVersion(context: Context): String {
-        return try {
-            val pIInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            val appVersion = pIInfo.versionName.toString()
-            return appVersion
-        } catch (_: Exception) {
-            "unknown"
-        }
-    }
-
-    private fun getAppName(context: Context): String {
-        return try {
-            val applicationInfo = context.applicationInfo
-            val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
-            return appName
-        } catch (_: Exception) {
-            "Unknown"
-        }
-    }
-
-    private fun getPackageName(context: Context): String {
-        return try {
-            context.packageName
-        } catch (_: Exception) {
-            "Unknown"
-        }
     }
 }
