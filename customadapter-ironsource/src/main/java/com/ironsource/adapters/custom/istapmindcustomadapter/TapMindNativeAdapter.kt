@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.browser.customtabs.CustomTabsClient.getPackageName
+import com.ironsource.adapters.custom.istapmindcustomadapter.GeoProviderIronSource.getAppInfo
 import com.ironsource.mediationsdk.adunit.adapter.BaseNativeAd
 import com.ironsource.mediationsdk.adunit.adapter.listener.NativeAdListener
 import com.ironsource.mediationsdk.adunit.adapter.utility.AdData
@@ -18,7 +18,6 @@ import com.tapminds.ads.native.TapMindNativeAdAdapterListener
 import com.tapminds.network.AdRequestPayload
 import com.tapminds.network.AdRequestPayloadHolder
 import java.util.Locale
-import kotlin.collections.iterator
 
 class TapMindNativeAdapter(networkSettings: NetworkSettings) :
     BaseNativeAd<ISTapMindCustomAdapterCustomAdapter>(networkSettings) {
@@ -33,14 +32,22 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
         for ((key, value) in adUnitData) {
             Log.d("AdUnitData", "$key : $value")
         }
+        val config = adData.configuration
+        val instanceName = config["instanceName"] as? String
+        val appData = getAppInfo(context)
+        val country = Locale.getDefault().country
+        val geo = GeoProviderIronSource.get(country)
 
         AdRequestPayloadHolder.playLoad = AdRequestPayload(
-            appName = getAppName(context),
-            placementId = "tapmind_native",
-            appVersion = getAppVersion(context),
+            appName = appData.appName,
+            placementId = instanceName,
+            appVersion = appData.versionName,
             adType = "Native",
-            country = Locale.getDefault().country,
-            packageName = getPackageName(context)
+            country = country,
+            packageName = appData.packageName,
+            adapterName = "ISTapMindCustomAdapterCustomAdapter",
+            sdkVersion = GeoProviderIronSource.sdkVersion,
+            placementFlag = if (instanceName?.isNotEmpty() == true) 1 else 4
         )
 
         val request = object : TapMindAdapterResponseParameters {
@@ -65,7 +72,6 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
             }
 
             override fun getCustomParameters(): Bundle {
-                // If you need custom params, pass using adConfig.mediationExtrasBundle (optional)
                 return Bundle()
             }
 
@@ -92,9 +98,8 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
 
         TapMindsMediationAdapter.getInstance()
             .loadNativeAd(
-                request, context as Activity,
+                request, context as Activity, 0,
                 object : TapMindNativeAdAdapterListener {
-
                     override fun onNativeAdLoaded(
                         tapMindNativeAd: TapMindNativeAd?,
                         bundle: Bundle?
@@ -147,32 +152,5 @@ class TapMindNativeAdapter(networkSettings: NetworkSettings) :
 
     override fun destroyAd(adData: AdData) {
 
-    }
-
-    private fun getAppVersion(context: Context): String {
-        return try {
-            val pIInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            val appVersion = pIInfo.versionName.toString()
-            return appVersion
-        } catch (_: Exception) {
-            "unknown"
-        }
-    }
-
-    private fun getAppName(context: Context): String {
-        return try {
-            val applicationInfo = context.applicationInfo
-            val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
-            return appName
-        } catch (_: Exception) {
-            "Unknown"
-        }
-    }
-    private fun getPackageName(context: Context): String {
-        return try {
-            context.packageName
-        } catch (_: Exception) {
-            "Unknown"
-        }
     }
 }
